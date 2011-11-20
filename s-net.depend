@@ -1,0 +1,105 @@
+# depslib dependency file v1.0
+1314212674 source:c:\dokumente und einstellungen\venom\desktop\s-net\main.cpp
+	<iostream>
+	"snet.hpp"
+
+1314212674 
+
+1314212647 source:c:\dokumente und einstellungen\venom\desktop\s-net\snet.cpp
+	"snet.hpp"
+	<iostream>
+	"winsock2.h"
+
+1314212557 h"
+
+1314212557 c:\dokumente und einstellungen\venom\desktop\s-net\snet.hpp
+	<iostream>
+	"winsock2.h"
+
+1314212676 source:/home/venom/Arbeitsfläche/s-net/main.cpp
+	<iostream>
+	"snet.hpp"
+
+1315853447 /home/venom/Arbeitsfläche/s-net/snet.hpp
+	<iostream>
+	"winsock2.h"
+	<stdlib.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/select.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<netdb.h>
+
+1315853687 source:/home/venom/Arbeitsfläche/s-net/snet.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+
+1316115566 source:c:\users\venom\desktop\s-net\snet.cpp
+
+1320604031 c:\users\venom\desktop\s-net\snet.hpp
+	<iostream>
+	<exception>
+	"winsock2.h"
+	"ws2tcpip.h"
+	<stdlib.h>
+	<unistd.h>
+	<sys/types.h>
+	<sys/socket.h>
+	<sys/select.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<netdb.h>
+	<errno.h>
+	<string.h>
+
+1320605124 source:c:\users\venom\desktop\s-net\main.cpp
+	<iostream>
+	"snet.hpp"
+
+1316620258 source:c:\users\venom\desktop\s-net\snet_tcp.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+
+1320603978 source:c:\users\venom\desktop\s-net\snet_tcp_client.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+	<stdio.h>
+
+1320603978 source:c:\users\venom\desktop\s-net\snet_tcp_server.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+	<stdio.h>
+
+1316531593 source:c:\users\venom\desktop\s-net\snet_exception.cpp
+	"snet.hpp"
+
+1317224641 source:c:\users\venom\desktop\s-net\snet_error_handling.cpp
+	"snet.hpp"
+	<errno.h>
+	<string.h>
+
+1316907444 source:c:\users\venom\desktop\s-net\snet_tcp_client_6.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+	<stdio.h>
+
+1316907444 source:c:\users\venom\desktop\s-net\snet_tcp_server_6.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+	<stdio.h>
+
+1316620258 source:c:\users\venom\desktop\s-net\snet_tcp_socket.cpp
+	"snet.hpp"
+	<iostream>
+	<string.h>
+
+1317221201 source:c:\users\venom\desktop\s-net\snet_udp_socket.cpp
+
