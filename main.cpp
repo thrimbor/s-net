@@ -28,13 +28,11 @@ int main(int argc, char* argv[])
             buffer[bytes] = 0;
 
             std::cout << "client said: " << buffer << "(" << bytes << ")" << std::endl;
-            //client->destroy();
             delete client;
         }
     } else {
         try
         {
-            snet::watcher();
             snet::TCP_client* client;
             std::cout << "connecting to: " << std::string(argv[2]) << std::endl;
             client = new snet::TCP_client(snet::IPv6, std::string(argv[2]), 1337);
