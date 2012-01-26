@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-snet::TCP_client::TCP_client (int sock_nr)
+snet::TCP_client::TCP_client (snet_socktype sock_nr)
 {
     this->sock = sock_nr;
 }
@@ -46,7 +46,11 @@ snet::TCP_client::TCP_client (unsigned char protocol_version, const std::string&
     }
 
     this->sock = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (this->sock == -1)
+    #if defined (_WIN32)
+        if (this->sock == INVALID_SOCKET)
+    #elif defined (__unix__)
+        if (this->sock == -1)
+    #endif
     {
         freeaddrinfo(addr);
         std::string ext_error;
@@ -70,7 +74,11 @@ snet::TCP_client::TCP_client (unsigned char protocol_version, const std::string&
 
 snet::TCP_client::~TCP_client ()
 {
-    if (this->sock != -1)
+    #if defined (_WIN32)
+        if (this->sock != INVALID_SOCKET)
+    #elif defined (__unix__)
+        if (this->sock != -1)
+    #endif
     {
         this->destroy();
     }

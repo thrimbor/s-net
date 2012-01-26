@@ -19,6 +19,12 @@
     #include <string.h>
 #endif
 
+#if defined (_WIN32)
+    #define snet_socktype SOCKET
+#elif defined (__unix__)
+    #define snet_socktype int
+#endif
+
 
 namespace snet
 {
@@ -109,11 +115,20 @@ namespace snet
                 {
                     return 0;
                 }
+                #if defined (_WIN32)
+                    if (rv == SOCKET_ERROR)
+                    {
+                        std::string ext_error;
+                        snet::get_error_message(ext_error);
+
+                        throw snet::Exception("receive() failed. " + ext_error);
+                    }
+                #endif
                 return rv;
             }
 
         protected:
-            int sock;
+            snet_socktype sock;
 
             inline bool destroy()
             {
@@ -129,7 +144,7 @@ namespace snet
     class TCP_client : public TCP_socket
     {
         public:
-            TCP_client (int sock_nr);
+            TCP_client (snet_socktype sock_nr);
             TCP_client (unsigned char protocol_version, const std::string& host, unsigned short int port);
             ~TCP_client ();
     };

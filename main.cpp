@@ -37,15 +37,8 @@ int main(int argc, char* argv[])
             std::cout << "connecting to: " << std::string(argv[2]) << std::endl;
             client = new snet::TCP_client(snet::IPv6, std::string(argv[2]), 1337);
 
-            char buffer[7];
-            buffer[0] = 'h';
-            buffer[1] = 'e';
-            buffer[2] = 'l';
-            buffer[3] = 'l';
-            buffer[4] = 'o';
-            buffer[5] = '!';
-            buffer[6] = 0;
-            client->send(buffer, 7);
+            std::string buffer("hello!");
+            client->send(buffer.data(), buffer.size());
             delete client;
         } catch (snet::Exception e) {
             std::cout << "Exception: " << e.what() << std::endl;

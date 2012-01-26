@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
-	<ActiveTarget name="Release" />
+	<ActiveTarget name="Debug" />
 	<File name="main.cpp" open="1" top="0" tabpos="1">
-		<Cursor position="791" topLine="0" />
+		<Cursor position="1124" topLine="0" />
 	</File>
 	<File name="snet.hpp" open="1" top="1" tabpos="2">
-		<Cursor position="3771" topLine="107" />
+		<Cursor position="2669" topLine="83" />
 	</File>
 	<File name="snet_tcp_client.cpp" open="1" top="0" tabpos="3">
-		<Cursor position="297" topLine="0" />
+		<Cursor position="297" topLine="32" />
 	</File>
 	<File name="snet_tcp_server.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="2009" topLine="0" />
+		<Cursor position="2009" topLine="50" />
 	</File>
 	<File name="snet_udp_socket.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="0" topLine="0" />

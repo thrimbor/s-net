@@ -40,7 +40,11 @@ snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int
     }
 
     this->sock = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (this->sock == -1)
+    #if defined (_WIN32)
+        if (this->sock == INVALID_SOCKET)
+    #elif defined (__unix__)
+        if (this->sock == -1)
+    #endif
     {
         freeaddrinfo(addr);
         std::string ext_error;
@@ -73,7 +77,11 @@ snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int
 
 snet::TCP_server::~TCP_server ()
 {
-    if (this->sock != -1)
+    #if defined (_WIN32)
+        if (this->sock != INVALID_SOCKET)
+    #elif defined (__unix__)
+        if (this->sock != -1)
+    #endif
     {
         this->destroy();
     }
@@ -81,9 +89,14 @@ snet::TCP_server::~TCP_server ()
 
 snet::TCP_client* snet::TCP_server::accept ()
 {
-    int s;
+    snet_socktype s;
     s = ::accept(this->sock, NULL, 0);
-    if (s == -1)
+
+    #if defined (_WIN32)
+        if (s == INVALID_SOCKET)
+    #elif defined (__unix__)
+        if (s == -1)
+    #endif
     {
         std::string ext_error;
         snet::get_error_message(ext_error);
@@ -91,6 +104,5 @@ snet::TCP_client* snet::TCP_server::accept ()
         throw snet::Exception("accept() failed. " + ext_error);
     }
 
-    snet::TCP_client* t_client = new snet::TCP_client(s);
-    return t_client;
+    return new snet::TCP_client(s);
 }
