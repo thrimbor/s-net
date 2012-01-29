@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int port, int max_sim_con_requests)
+snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int port, int max_sim_con_requests, int flags)
 {
     snet::watcher();
     addrinfo hints;
@@ -51,6 +51,12 @@ snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int
         snet::get_error_message(ext_error);
 
         throw snet::Exception("socket() failed. " + ext_error);
+    }
+
+    if (flags & snet::REUSE_PORT)
+    {
+        int opt = 1;
+        setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&opt), sizeof(opt));
     }
 
     if (bind(this->sock, addr->ai_addr, addr->ai_addrlen) == -1)

@@ -33,6 +33,11 @@ namespace snet
         IPv6 = 1,
         IPv4 = 2,
     };
+	
+	enum flags
+	{
+		REUSE_PORT = 1,
+	};
 
     inline void get_error_message (std::string& errstring)
     {
@@ -152,7 +157,7 @@ namespace snet
     class TCP_server : public TCP_socket
     {
         public:
-            TCP_server (unsigned char protocol_version, unsigned short int port, int max_sim_con_requests);
+            TCP_server (unsigned char protocol_version, unsigned short int port, int max_sim_con_requests, int flags = 0);
             ~TCP_server ();
             snet::TCP_client* accept ();
     };
