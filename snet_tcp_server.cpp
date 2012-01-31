@@ -16,9 +16,11 @@ snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int
     {
         case snet::IPv6:
             hints.ai_family = PF_INET6;
+            this->ip_version = PF_INET6;
             break;
         case snet::IPv4:
             hints.ai_family = PF_INET;
+            this->ip_version = PF_INET;
             break;
         default:
             throw snet::Exception("invalid protocol.");
@@ -96,7 +98,22 @@ snet::TCP_server::~TCP_server ()
 snet::TCP_client* snet::TCP_server::accept ()
 {
     snet_socktype s;
-    s = ::accept(this->sock, NULL, 0);
+    char str[INET6_ADDRSTRLEN];
+
+    if (this->ip_version == PF_INET6)
+    {
+        sockaddr_in6 sadr;
+        socklen_t addr_size = sizeof(sockaddr_in6);
+        s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
+        inet_ntop(AF_INET6, &sadr.sin6_addr, str, INET6_ADDRSTRLEN);
+    }
+    else
+    {
+        sockaddr_in sadr;
+        socklen_t addr_size = sizeof(sockaddr_in);
+        s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
+        inet_ntop(AF_INET, &sadr.sin_addr, str, INET_ADDRSTRLEN);
+    }
 
     #if defined (_WIN32)
         if (s == INVALID_SOCKET)
@@ -110,5 +127,7 @@ snet::TCP_client* snet::TCP_server::accept ()
         throw snet::Exception("accept() failed. " + ext_error);
     }
 
-    return new snet::TCP_client(s);
+    snet::TCP_client* socket = new snet::TCP_client(s);
+    socket->ip = std::string(str);
+    return socket;
 }

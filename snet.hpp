@@ -25,6 +25,15 @@
     #define snet_socktype int
 #endif
 
+#if !defined (inet_pton)
+    #define SNET_INET_PTON_REPLACEMENT
+    #include "snet_inet_pton.hpp"
+#endif
+#if !defined (inet_ntop)
+    #define SNET_INET_NTOP_REPLACEMENT
+    #include "snet_inet_ntop.hpp"
+#endif
+
 
 namespace snet
 {
@@ -33,7 +42,7 @@ namespace snet
         IPv6 = 1,
         IPv4 = 2,
     };
-	
+
 	enum flags
 	{
 		REUSE_PORT = 1,
@@ -152,6 +161,9 @@ namespace snet
             TCP_client (snet_socktype sock_nr);
             TCP_client (unsigned char protocol_version, const std::string& host, unsigned short int port);
             ~TCP_client ();
+        //protected:
+            std::string ip;
+        friend class TCP_server;
     };
 
     class TCP_server : public TCP_socket
@@ -160,6 +172,8 @@ namespace snet
             TCP_server (unsigned char protocol_version, unsigned short int port, int max_sim_con_requests, int flags = 0);
             ~TCP_server ();
             snet::TCP_client* accept ();
+        protected:
+            int ip_version;
     };
 
     class UDP_socket

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "snet.hpp"
 
 int main(int argc, char* argv[])
@@ -22,7 +23,7 @@ int main(int argc, char* argv[])
             char buffer[256];
 
             client = server->accept();
-            std::cout << "new client: " << std::endl;
+            std::cout << "new client: " << client->ip << std::endl;
 
             bytes = client->receive(buffer, bytes);
             buffer[bytes] = 0;
