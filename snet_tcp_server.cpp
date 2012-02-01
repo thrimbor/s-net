@@ -58,7 +58,37 @@ snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int
     if (flags & snet::REUSE_PORT)
     {
         int opt = 1;
-        setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&opt), sizeof(opt));
+        int errorcode = setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, reinterpret_cast<char*>(&opt), sizeof(opt));
+        #if defined (_WIN32)
+            if (errorcode == SOCKET_ERROR)
+        #elif defined (__unix__)
+            if (this->sock == -1)
+        #endif
+        {
+            freeaddrinfo(addr);
+            std::string ext_error;
+            snet::get_error_message(ext_error);
+
+            throw snet::Exception("setsockopt() failed. " + ext_error);
+        }
+    }
+
+    if (flags & snet::DISABLE_NAGLE)
+    {
+        int opt = 1;
+        int errorcode = setsockopt(this->sock, IPPROTO_TCP, TCP_NODELAY, reinterpret_cast<char*>(&opt), sizeof(opt));
+        #if defined (_WIN32)
+            if (errorcode == SOCKET_ERROR)
+        #elif defined (__unix__)
+            if (this->sock == -1)
+        #endif
+        {
+            freeaddrinfo(addr);
+            std::string ext_error;
+            snet::get_error_message(ext_error);
+
+            throw snet::Exception("setsockopt() failed. " + ext_error);
+        }
     }
 
     if (bind(this->sock, addr->ai_addr, addr->ai_addrlen) == -1)

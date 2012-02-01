@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
             char buffer[256];
 
             client = server->accept();
+            client->set_receive_timeout(5000);
             std::cout << "new client: " << client->ip << std::endl;
 
             bytes = client->receive(buffer, bytes);

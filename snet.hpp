@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <exception>
 
 #if defined (_WIN32)
@@ -46,23 +47,27 @@ namespace snet
 	enum flags
 	{
 		REUSE_PORT = 1,
+		DISABLE_NAGLE = 2,
 	};
 
     inline void get_error_message (std::string& errstring)
     {
+        std::ostringstream str;
         #if defined (_WIN32)
             LPSTR errString = NULL;
 
             FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, WSAGetLastError(), 0, (LPSTR)&errString, 0, 0);
-            errstring = "WSA: " + std::string(errString);
+            str << "WSA: " << errString;
             LocalFree(errString);
         #elif defined(__unix__)
+            int errsv = errno;
             char buffer[256];
-            strerror_r(errno, buffer, 254);
+            strerror_r(errsv, buffer, 254);
             buffer[255] = 0;
 
-            errstring = "BS: " + std::string(buffer);
+            str << "BS: errno=" << errsv << ", " << buffer;
         #endif
+        errstring = str.str();
         return;
     }
 
@@ -139,6 +144,11 @@ namespace snet
                     }
                 #endif
                 return rv;
+            }
+
+            inline void set_receive_timeout (int ms)
+            {
+                setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<char*>(&ms), sizeof(ms));
             }
 
         protected:

@@ -39,8 +39,9 @@
 
 1316115566 source:c:\users\venom\desktop\s-net\snet.cpp
 
-1328047596 c:\users\venom\desktop\s-net\snet.hpp
+1328103827 c:\users\venom\desktop\s-net\snet.hpp
 	<iostream>
+	<sstream>
 	<exception>
 	"winsock2.h"
 	"ws2tcpip.h"
@@ -57,7 +58,7 @@
 	"snet_inet_pton.hpp"
 	"snet_inet_ntop.hpp"
 
-1328047732 source:c:\users\venom\desktop\s-net\main.cpp
+1328103887 source:c:\users\venom\desktop\s-net\main.cpp
 	<iostream>
 	<string>
 	"snet.hpp"
@@ -73,7 +74,7 @@
 	<string.h>
 	<stdio.h>
 
-1328047596 source:c:\users\venom\desktop\s-net\snet_tcp_server.cpp
+1328097728 source:c:\users\venom\desktop\s-net\snet_tcp_server.cpp
 	"snet.hpp"
 	<iostream>
 	<string.h>
