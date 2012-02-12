@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 
             client = server->accept();
             client->set_receive_timeout(5000);
-            std::cout << "new client: " << client->ip << std::endl;
+            std::cout << "new client: " << client->get_ip() << std::endl;
 
             bytes = client->receive(buffer, bytes);
             buffer[bytes] = 0;

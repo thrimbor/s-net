@@ -171,7 +171,8 @@ namespace snet
             TCP_client (snet_socktype sock_nr);
             TCP_client (unsigned char protocol_version, const std::string& host, unsigned short int port);
             ~TCP_client ();
-        //protected:
+			inline std::string get_ip () {return this->ip;};
+        protected:
             std::string ip;
         friend class TCP_server;
     };
