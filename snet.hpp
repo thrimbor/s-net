@@ -71,34 +71,6 @@ namespace snet
         return;
     }
 
-    class Watchman
-    {
-        public:
-            Watchman ()
-            {
-                #if defined (_WIN32)
-                    WSAData wsa;
-                    if (WSAStartup(MAKEWORD(2,1), &wsa) != 0)
-                    {
-                        // BIG PROBLEM!
-                    }
-                    // hier vielleicht noch WSAGetLastError einsetzen und das ganze mit exceptions machen
-                #endif
-            };
-
-            ~Watchman ()
-            {
-                #if defined (_WIN32)
-                    WSACleanup();
-                #endif
-            };
-    };
-
-    inline void watcher ()
-    {
-        static snet::Watchman watchman;
-    }
-
     class Exception : public std::exception
     {
         public:
@@ -163,6 +135,34 @@ namespace snet
                 #endif
                 return true;
             }
+
+            inline static void watcher ()
+            {
+                static snet::TCP_socket::Watchman watchman;
+            }
+
+            class Watchman
+            {
+                public:
+                    Watchman ()
+                    {
+                        #if defined (_WIN32)
+                            WSAData wsa;
+                            if (WSAStartup(MAKEWORD(2,1), &wsa) != 0)
+                            {
+                                // BIG PROBLEM!
+                            }
+                            // hier vielleicht noch WSAGetLastError einsetzen und das ganze mit exceptions machen
+                        #endif
+                    };
+
+                    ~Watchman ()
+                    {
+                        #if defined (_WIN32)
+                            WSACleanup();
+                        #endif
+                    };
+            };
     };
 
     class TCP_client : public TCP_socket

@@ -11,7 +11,7 @@ snet::TCP_client::TCP_client (snet_socktype sock_nr)
 
 snet::TCP_client::TCP_client (unsigned char protocol_version, const std::string& host, unsigned short int port)
 {
-    snet::watcher();
+    snet::TCP_socket::watcher();
     addrinfo hints;
     addrinfo* addr;
     char port_str[6];

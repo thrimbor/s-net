@@ -5,7 +5,7 @@
 
 snet::TCP_server::TCP_server (unsigned char protocol_version, unsigned short int port, int max_sim_con_requests, int flags)
 {
-    snet::watcher();
+    snet::TCP_socket::watcher();
     addrinfo hints;
     addrinfo* addr;
     char port_str[6];

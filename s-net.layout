@@ -2,10 +2,10 @@
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
 	<File name="main.cpp" open="1" top="1" tabpos="1">
-		<Cursor position="57" topLine="0" />
+		<Cursor position="102" topLine="0" />
 	</File>
 	<File name="snet.hpp" open="1" top="0" tabpos="2">
-		<Cursor position="3768" topLine="124" />
+		<Cursor position="3625" topLine="121" />
 	</File>
 	<File name="snet_inet_ntop.cpp" open="1" top="0" tabpos="5">
 		<Cursor position="1346" topLine="0" />

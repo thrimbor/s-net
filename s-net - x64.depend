@@ -39,8 +39,9 @@
 
 1316115566 source:c:\users\venom\desktop\s-net\snet.cpp
 
-1327797393 c:\users\venom\desktop\s-net\snet.hpp
+1334374046 c:\users\venom\desktop\s-net\snet.hpp
 	<iostream>
+	<sstream>
 	<exception>
 	"winsock2.h"
 	"ws2tcpip.h"
@@ -54,6 +55,8 @@
 	<netdb.h>
 	<errno.h>
 	<string.h>
+	"snet_inet_pton.hpp"
+	"snet_inet_ntop.hpp"
 
 1327598474 source:c:\users\venom\desktop\s-net\main.cpp
 	<iostream>
@@ -64,7 +67,7 @@
 	<iostream>
 	<string.h>
 
-1327609982 source:c:\users\venom\desktop\s-net\snet_tcp_client.cpp
+1334374068 source:c:\users\venom\desktop\s-net\snet_tcp_client.cpp
 	"snet.hpp"
 	<iostream>
 	<string.h>
@@ -86,5 +89,9 @@
 	<iostream>
 	<string.h>
 
-1317221201 source:c:\users\venom\desktop\s-net\snet_udp_socket.cpp
+1317224801 source:c:\users\venom\desktop\s-net\snet_udp_socket.cpp
+
+1328048012 c:\users\venom\desktop\s-net\snet_inet_pton.hpp
+
+1328048149 c:\users\venom\desktop\s-net\snet_inet_ntop.hpp
 
