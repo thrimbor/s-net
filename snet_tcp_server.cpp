@@ -135,14 +135,14 @@ snet::TCP_client* snet::TCP_server::accept ()
         sockaddr_in6 sadr;
         socklen_t addr_size = sizeof(sockaddr_in6);
         s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
-        inet_ntop(AF_INET6, &sadr.sin6_addr, str, INET6_ADDRSTRLEN);
+        inet_ntop(AF_INET6, (void*)&sadr.sin6_addr, str, (socklen_t)INET6_ADDRSTRLEN);
     }
     else
     {
         sockaddr_in sadr;
         socklen_t addr_size = sizeof(sockaddr_in);
         s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
-        inet_ntop(AF_INET, &sadr.sin_addr, str, INET_ADDRSTRLEN);
+        inet_ntop(AF_INET, (void*)&sadr.sin_addr, str, (socklen_t)INET_ADDRSTRLEN);
     }
 
     #if defined (_WIN32)

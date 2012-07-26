@@ -1,3 +1,1 @@
 - eine Art Fehler-Stack implementerien, d.h. es gibt eine liste von strings o.Ä. (basierend auf std::queue auf Basis einer std::list) auf die die Fehler gelegt werden
-- auf linux testen (linux-support fehlt noch, also um unix sockets kümmern!)
-- generische Socket-Klasse einführen, die sich um das watcher-Objekt kümmert
