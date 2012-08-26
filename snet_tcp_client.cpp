@@ -3,12 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
-snet::TCP_client::TCP_client (snet_socktype sock_nr)
-{
-    this->sock = sock_nr;
-}
-
 snet::TCP_client::TCP_client (unsigned char protocol_version, const std::string& host, unsigned short int port)
 {
     snet::TCP_socket::watcher();

@@ -129,6 +129,8 @@ snet::TCP_client* snet::TCP_server::accept ()
 {
     snet_socktype s;
     char str[INET6_ADDRSTRLEN];
+    memset(str, 0, INET6_ADDRSTRLEN);
+    unsigned short int port;
 
     if (this->ip_version == PF_INET6)
     {
@@ -136,6 +138,7 @@ snet::TCP_client* snet::TCP_server::accept ()
         socklen_t addr_size = sizeof(sockaddr_in6);
         s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
         inet_ntop(AF_INET6, (void*)&sadr.sin6_addr, str, (socklen_t)INET6_ADDRSTRLEN);
+        port = sadr.sin6_port;
     }
     else
     {
@@ -143,6 +146,7 @@ snet::TCP_client* snet::TCP_server::accept ()
         socklen_t addr_size = sizeof(sockaddr_in);
         s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
         inet_ntop(AF_INET, (void*)&sadr.sin_addr, str, (socklen_t)INET_ADDRSTRLEN);
+        port = sadr.sin_port;
     }
 
     #if defined (_WIN32)
@@ -159,5 +163,6 @@ snet::TCP_client* snet::TCP_server::accept ()
 
     snet::TCP_client* socket = new snet::TCP_client(s);
     socket->ip = std::string(str);
+    socket->port = port;
     return socket;
 }

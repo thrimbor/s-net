@@ -2,6 +2,7 @@
 #include <string>
 #include "snet.hpp"
 
+/*
 int main(int argc, char* argv[])
 {
     if (argv[1][0] == 's')
@@ -46,5 +47,30 @@ int main(int argc, char* argv[])
             std::cout << "Exception: " << e.what() << std::endl;
             return 0;
         }
+    }
+}
+*/
+
+int main (int argc, char* argv[])
+{
+    if (argc < 2) return 1;
+
+    if (argv[1][0] == 's')
+    {
+        snet::UDP_socket testsocket(snet::IPv6, 1234);
+        snet::UDP_peer peer;
+        char buffer[256];
+        int bytes = testsocket.receive(peer, buffer, 256);
+
+        std::cout << "client said: " << buffer << "(" << bytes << ")" << std::endl;
+        std::cout << "ip was: " << peer.get_ip() << ", port was: " << peer.get_port() << std::endl;
+        return 0;
+    }
+    else
+    {
+        snet::UDP_socket testsocket(snet::IPv6);
+        snet::UDP_peer peer(snet::IPv6, std::string(argv[2]), 1234);
+        char buffer[] = "hello world from my snet!";
+        testsocket.send(peer, buffer, sizeof(buffer));
     }
 }

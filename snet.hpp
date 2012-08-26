@@ -42,13 +42,13 @@ namespace snet
     enum protocol_versions
     {
         IPv6 = 1,
-        IPv4 = 2,
+        IPv4 = 2
     };
 
 	enum flags
 	{
 		REUSE_PORT = 1,
-		DISABLE_NAGLE = 2,
+		DISABLE_NAGLE = 2
 	};
 
     inline void get_error_message (std::string& errstring)
@@ -75,10 +75,7 @@ namespace snet
     class Exception : public std::exception
     {
         public:
-            Exception (const std::string& details)
-            {
-                this->m_details = details;
-            };
+            Exception (const std::string& details) : m_details(details) {};
             ~Exception() throw () {};
             const char* what() const throw()
             {
@@ -88,7 +85,52 @@ namespace snet
             std::string m_details;
     };
 
-    class TCP_socket
+    class Socket
+    {
+        protected:
+            Socket() : sock(0) {};
+            snet_socktype sock;
+
+            inline bool destroy()
+            {
+                #if defined (_WIN32)
+                    closesocket(this->sock);
+                #elif defined (__unix__)
+                    close(this->sock);
+                #endif
+                return true;
+            }
+
+            inline static void watcher ()
+            {
+                #if defined (_WIN32)
+                    static snet::Socket::Watchman watchman;
+                #endif
+            }
+
+            #if defined (_WIN32)
+                class Watchman
+                {
+                    public:
+                        Watchman ()
+                        {
+                            WSAData wsa;
+                            if (WSAStartup(MAKEWORD(2,1), &wsa) != 0)
+                            {
+                                // BIG PROBLEM!
+                            }
+                            // hier vielleicht noch WSAGetLastError einsetzen und das ganze mit exceptions machen
+                            std::cout << "WSA initialized" << std::endl;
+                        };
+
+                        ~Watchman () { WSACleanup(); std::cout << "WSA closed" << std::endl; };
+                };
+            #endif
+
+            friend class Selector;
+    };
+
+    class TCP_socket : public Socket
     {
         public:
             inline bool send (const char* buffer, int len)
@@ -103,7 +145,7 @@ namespace snet
             {
                 int rv;
                 rv = recv(this->sock, buffer, len, 0);
-                if (rv==-1)
+                if (rv == -1)
                 {
                     return 0;
                 }
@@ -123,58 +165,19 @@ namespace snet
             {
                 setsockopt(this->sock, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<char*>(&ms), sizeof(ms));
             }
-
-        protected:
-            snet_socktype sock;
-
-            inline bool destroy()
-            {
-                #if defined (_WIN32)
-                    closesocket(this->sock);
-                #elif defined (__unix__)
-                    close(this->sock);
-                #endif
-                return true;
-            }
-
-            inline static void watcher ()
-            {
-                static snet::TCP_socket::Watchman watchman;
-            }
-
-            class Watchman
-            {
-                public:
-                    Watchman ()
-                    {
-                        #if defined (_WIN32)
-                            WSAData wsa;
-                            if (WSAStartup(MAKEWORD(2,1), &wsa) != 0)
-                            {
-                                // BIG PROBLEM!
-                            }
-                            // hier vielleicht noch WSAGetLastError einsetzen und das ganze mit exceptions machen
-                        #endif
-                    };
-
-                    ~Watchman ()
-                    {
-                        #if defined (_WIN32)
-                            WSACleanup();
-                        #endif
-                    };
-            };
     };
 
     class TCP_client : public TCP_socket
     {
         public:
-            TCP_client (snet_socktype sock_nr);
+            TCP_client (snet_socktype sock_nr) { this->sock = sock_nr; };
             TCP_client (unsigned char protocol_version, const std::string& host, unsigned short int port);
             ~TCP_client ();
 			inline std::string get_ip () {return this->ip;};
+			inline unsigned short int get_port () {return this->port;};
         protected:
             std::string ip;
+            unsigned short int port;
         friend class TCP_server;
     };
 
@@ -188,11 +191,113 @@ namespace snet
             int ip_version;
     };
 
-    class UDP_socket
+    class UDP_peer
     {
         public:
-
+            UDP_peer () : paddr(NULL), p_version(0) {};
+            UDP_peer (unsigned char protocol_version, const std::string& host, unsigned short int port);
+            ~UDP_peer ()
+            {
+                if (this->paddr != 0)
+                    delete[] this->paddr;
+            };
+            std::string get_ip();
+            unsigned short int get_port();
         protected:
-            int dummy;
+            sockaddr* paddr;
+            int paddr_len;
+            unsigned char p_version;
+        friend class UDP_socket;
+    };
+
+    class UDP_socket : public Socket
+    {
+        public:
+            UDP_socket (unsigned char protocol_version);
+            UDP_socket (unsigned char protocol_version, unsigned short int port);
+            ~UDP_socket ();
+
+            inline bool send (UDP_peer& peer, const char* buffer, int len)
+            {
+                if (this->p_version != peer.p_version) return false;
+                if (len != sendto(this->sock, buffer, len, 0, peer.paddr, peer.paddr_len)) return false;
+                return true;
+            };
+
+            inline int receive (UDP_peer& peer, char* buffer, int len)
+            {
+                if (this->p_version != peer.p_version)
+                {
+                    if (peer.p_version == 0) peer.p_version = this->p_version;
+                }
+                else return false;
+
+                std::cout << "peer ip version: " << (int)peer.p_version << std::endl;
+                std::cout << "socket ip version: " << (int)this->p_version << std::endl;
+
+                if (peer.paddr == 0)
+                {
+                    if (peer.p_version == snet::IPv6)
+                    {
+                        peer.paddr = (sockaddr*) new sockaddr_in6;
+                        peer.paddr_len = sizeof(sockaddr_in6);
+                        std::cout << "new ipv6 structure allocated" << std::endl;
+                    }
+                    else
+                    {
+                        peer.paddr = (sockaddr*) new sockaddr_in;
+                        peer.paddr_len = sizeof(sockaddr_in);
+                        std::cout << "new ipv4 structure allocated" << std::endl;
+                    }
+                }
+                int rv = recvfrom(this->sock, buffer, len, 0, peer.paddr, &peer.paddr_len);
+                if (rv == -1)
+                {
+                    return 0;
+                }
+                #if defined (_WIN32)
+                    if (rv == SOCKET_ERROR)
+                    {
+                        std::string ext_error;
+                        snet::get_error_message(ext_error);
+
+                        throw snet::Exception("receive() failed. " + ext_error);
+                    }
+                #endif
+                return rv;
+            };
+        protected:
+            unsigned char p_version;
+    };
+
+    class Selector
+    {
+        public:
+            Selector ()
+            {
+                FD_ZERO(&this->set_receive);
+                FD_ZERO(&this->set_send);
+                FD_ZERO(&this->set_error);
+                this->max_sock = 0;
+                this->timeval_ptr = NULL;
+            };
+            ~Selector ()
+            {
+                if (this->timeval_ptr != NULL) delete this->timeval_ptr;
+            };
+            void add_receive (Socket sock);
+            void add_send (Socket sock);
+            void add_error (Socket sock);
+            bool contains_receive (Socket sock);
+            bool contains_send (Socket sock);
+            bool contains_error (Socket sock);
+            void wait ();
+            void set_timeout (int seconds, int microseconds);
+        protected:
+            FD_SET set_receive;
+            FD_SET set_send;
+            FD_SET set_error;
+            int max_sock;
+            timeval* timeval_ptr;
     };
 }
