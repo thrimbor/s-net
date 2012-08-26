@@ -45,7 +45,7 @@
 		<Unit filename="snet_inet_ntop.hpp" />
 		<Unit filename="snet_inet_pton.cpp" />
 		<Unit filename="snet_inet_pton.hpp" />
-		<Unit filename="snet_selector.cpp" />
+		<Unit filename="snet_poll.cpp" />
 		<Unit filename="snet_tcp_client.cpp" />
 		<Unit filename="snet_tcp_server.cpp" />
 		<Unit filename="snet_udp_socket.cpp" />

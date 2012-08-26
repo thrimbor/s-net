@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <exception>
+#include <list>
 
 #if defined (_WIN32)
     #include "winsock2.h"
@@ -51,6 +52,13 @@ namespace snet
 		DISABLE_NAGLE = 2
 	};
 
+	enum event_flags
+	{
+	    FLAG_RECEIVE = 1,
+	    FLAG_SEND = 2,
+	    FLAG_ERROR = 4
+	};
+
     inline void get_error_message (std::string& errstring)
     {
         std::ostringstream str;
@@ -89,7 +97,9 @@ namespace snet
     {
         protected:
             Socket() : sock(0) {};
+            public:
             snet_socktype sock;
+            protected:
 
             inline bool destroy()
             {
@@ -270,34 +280,13 @@ namespace snet
             unsigned char p_version;
     };
 
-    class Selector
+    class Socket_item
     {
         public:
-            Selector ()
-            {
-                FD_ZERO(&this->set_receive);
-                FD_ZERO(&this->set_send);
-                FD_ZERO(&this->set_error);
-                this->max_sock = 0;
-                this->timeval_ptr = NULL;
-            };
-            ~Selector ()
-            {
-                if (this->timeval_ptr != NULL) delete this->timeval_ptr;
-            };
-            void add_receive (Socket sock);
-            void add_send (Socket sock);
-            void add_error (Socket sock);
-            bool contains_receive (Socket sock);
-            bool contains_send (Socket sock);
-            bool contains_error (Socket sock);
-            void wait ();
-            void set_timeout (int seconds, int microseconds);
-        protected:
-            FD_SET set_receive;
-            FD_SET set_send;
-            FD_SET set_error;
-            int max_sock;
-            timeval* timeval_ptr;
+            Socket_item (Socket socket, unsigned char flags) : sock(socket), flags(flags) {};
+            Socket sock;
+            unsigned char flags;
     };
+
+    std::list<Socket_item> poll (std::list<Socket_item> socket_list);
 }
