@@ -12,18 +12,7 @@ snet::TCP_client::TCP_client (unsigned char protocol_version, const std::string&
 
     memset(&hints, 0, sizeof(hints));
 
-    switch (protocol_version)
-    {
-        case snet::IPv6:
-            hints.ai_family = PF_INET6;
-            break;
-        case snet::IPv4:
-            hints.ai_family = PF_INET;
-            break;
-        default:
-            throw snet::Exception("invalid protocol.");
-            break;
-    }
+    hints.ai_family = (protocol_version == snet::IPv6) ? PF_INET6 : PF_INET;
 
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = 0;

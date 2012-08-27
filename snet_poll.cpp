@@ -26,8 +26,6 @@ std::list<snet::Socket_item> snet::poll (const std::list<snet::Socket_item>& soc
 
     for (std::list<Socket_item>::const_iterator it = socket_list.begin(); it != socket_list.end(); it++)
     {
-        //Socket_item t = *it;
-        //snet_socktype sock = t.sock;
         if ((*it).flags > 0)
         {
             unsigned char flags = 0;

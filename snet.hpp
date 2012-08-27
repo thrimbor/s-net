@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <sstream>
 #include <exception>
 #include <list>
@@ -146,10 +145,9 @@ namespace snet
                                 // BIG PROBLEM!
                             }
                             // hier vielleicht noch WSAGetLastError einsetzen und das ganze mit exceptions machen
-                            std::cout << "WSA initialized" << std::endl;
                         };
 
-                        ~Watchman () { WSACleanup(); std::cout << "WSA closed" << std::endl; };
+                        ~Watchman () { WSACleanup(); };
                 };
             #endif
 
@@ -263,22 +261,17 @@ namespace snet
                 }
                 else return false;
 
-                std::cout << "peer ip version: " << (int)peer.p_version << std::endl;
-                std::cout << "socket ip version: " << (int)this->p_version << std::endl;
-
                 if (peer.paddr == 0)
                 {
                     if (peer.p_version == snet::IPv6)
                     {
                         peer.paddr = (sockaddr*) new sockaddr_in6;
                         peer.paddr_len = sizeof(sockaddr_in6);
-                        std::cout << "new ipv6 structure allocated" << std::endl;
                     }
                     else
                     {
                         peer.paddr = (sockaddr*) new sockaddr_in;
                         peer.paddr_len = sizeof(sockaddr_in);
-                        std::cout << "new ipv4 structure allocated" << std::endl;
                     }
                 }
                 int rv = recvfrom(this->sock, buffer, len, 0, peer.paddr, &peer.paddr_len);
