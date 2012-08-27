@@ -60,10 +60,17 @@ int main (int argc, char* argv[])
         snet::UDP_socket testsocket(snet::IPv6, 1234);
         snet::UDP_peer peer;
         char buffer[256];
+
+        std::list<snet::Socket_item> socklist;
+        socklist.push_back(snet::Socket_item(testsocket.get_sock(), snet::FLAG_RECEIVE));
+        snet::poll(socklist);
+
+        if (testsocket.is_in_list(socklist)) std::cout << "select worked" << std::endl;
+
         int bytes = testsocket.receive(peer, buffer, 256);
 
         std::cout << "client said: " << buffer << "(" << bytes << ")" << std::endl;
-        std::cout << "ip was: " << peer.get_ip() << ", port was: " << peer.get_port() << std::endl;
+        std::cout << "ip was: [" << peer.get_ip() << "]:" << peer.get_port() << std::endl;
         return 0;
     }
     else

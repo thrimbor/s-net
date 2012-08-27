@@ -93,13 +93,29 @@ namespace snet
             std::string m_details;
     };
 
+    class Socket_item
+    {
+        public:
+            Socket_item (snet_socktype sock, unsigned char flags) : sock(sock), flags(flags) {};
+            snet_socktype sock;
+            unsigned char flags;
+    };
+
     class Socket
     {
+        public:
+            bool is_in_list (const std::list<Socket_item>& socklist)
+            {
+                for (std::list<Socket_item>::const_iterator it = socklist.begin(); it != socklist.end(); it++)
+                {
+                    if ((*it).sock == this->sock) return true;
+                }
+                return false;
+            };
+            snet_socktype get_sock() {return this->sock;};
         protected:
             Socket() : sock(0) {};
-            public:
             snet_socktype sock;
-            protected:
 
             inline bool destroy()
             {
@@ -225,6 +241,11 @@ namespace snet
         public:
             UDP_socket (unsigned char protocol_version);
             UDP_socket (unsigned char protocol_version, unsigned short int port);
+            UDP_socket (UDP_socket& sock)
+            {
+                this->p_version = sock.p_version;
+                this->sock = sock.sock;
+            };
             ~UDP_socket ();
 
             inline bool send (UDP_peer& peer, const char* buffer, int len)
@@ -280,13 +301,5 @@ namespace snet
             unsigned char p_version;
     };
 
-    class Socket_item
-    {
-        public:
-            Socket_item (Socket socket, unsigned char flags) : sock(socket), flags(flags) {};
-            Socket sock;
-            unsigned char flags;
-    };
-
-    std::list<Socket_item> poll (std::list<Socket_item> socket_list);
+    std::list<Socket_item> poll (const std::list<Socket_item>& socket_list);
 }
