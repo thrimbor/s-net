@@ -57,7 +57,7 @@ int main (int argc, char* argv[])
 
     if (argv[1][0] == 's')
     {
-        snet::UDP_socket testsocket(snet::IPv6, 1234);
+        snet::UDP_socket testsocket(snet::IPv4, 1234);
         snet::UDP_peer peer;
         char buffer[256];
 
@@ -75,8 +75,8 @@ int main (int argc, char* argv[])
     }
     else
     {
-        snet::UDP_socket testsocket(snet::IPv6);
-        snet::UDP_peer peer(snet::IPv6, std::string(argv[2]), 1234);
+        snet::UDP_socket testsocket(snet::IPv4);
+        snet::UDP_peer peer(snet::IPv4, std::string(argv[2]), 1234);
         char buffer[] = "hello world from my snet!";
         testsocket.send(peer, buffer, sizeof(buffer));
     }

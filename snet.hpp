@@ -27,16 +27,6 @@
     #define snet_socktype int
 #endif
 
-#if !defined (inet_pton)
-    #define SNET_INET_PTON_REPLACEMENT
-    #include "snet_inet_pton.hpp"
-#endif
-#if !defined (inet_ntop)
-    #define SNET_INET_NTOP_REPLACEMENT
-    #include "snet_inet_ntop.hpp"
-#endif
-
-
 namespace snet
 {
     enum protocol_versions
@@ -57,6 +47,9 @@ namespace snet
 	    FLAG_SEND = 2,
 	    FLAG_ERROR = 4
 	};
+
+	int inet_pton(int, const char *, void *);
+	char* inet_ntop(int af, const void *addr, char *buf, size_t size);
 
     inline void get_error_message (std::string& errstring)
     {
@@ -274,7 +267,7 @@ namespace snet
                         peer.paddr_len = sizeof(sockaddr_in);
                     }
                 }
-                int rv = recvfrom(this->sock, buffer, len, 0, peer.paddr, &peer.paddr_len);
+                int rv = recvfrom(this->sock, buffer, len, 0, peer.paddr, (socklen_t*)&peer.paddr_len);
                 if (rv == -1)
                 {
                     return 0;

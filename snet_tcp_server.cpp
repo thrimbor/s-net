@@ -125,7 +125,7 @@ snet::TCP_client* snet::TCP_server::accept ()
         sockaddr_in6 sadr;
         socklen_t addr_size = sizeof(sockaddr_in6);
         s = ::accept(this->sock, (sockaddr*)&sadr, &addr_size);
-        inet_ntop(AF_INET6, (void*)&sadr.sin6_addr, str, (socklen_t)INET6_ADDRSTRLEN);
+        snet::inet_ntop(AF_INET6, (void*)&sadr.sin6_addr, str, (socklen_t)INET6_ADDRSTRLEN);
         port = sadr.sin6_port;
     }
     else
